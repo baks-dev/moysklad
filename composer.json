@@ -1,0 +1,40 @@
+{
+  "name": "baks-dev/moysklad",
+  "description": "Модуль МойСклад",
+  "homepage": "https://github.com/baks-dev/moysklad",
+  "keywords": [
+    "symfony",
+    "bundle",
+    "library",
+    "module",
+    "plugin",
+    "moysklad",
+    "baksdev"
+  ],
+  "license": "MIT",
+  "type": "symfony-bundle",
+  "authors": [
+    {
+      "name": "Baks Development",
+      "email": "admin@baks.dev"
+    }
+  ],
+  "require": {
+    "php": ">=8.3",
+    "baks-dev/core": "^7.1"
+  },
+  "require-dev": {
+    "roave/security-advisories": "dev-latest"
+  },
+  "autoload": {
+    "psr-4": {
+      "BaksDev\\Moysklad\\": ""
+    }
+  },
+  "config": {
+    "sort-packages": true,
+    "allow-plugins": {
+      "symfony/flex": true
+    }
+  }
+}
