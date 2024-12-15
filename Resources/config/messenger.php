@@ -21,20 +21,29 @@
  *  THE SOFTWARE.
  */
 
-declare(strict_types=1);
+namespace Symfony\Component\DependencyInjection\Loader\Configurator;
 
-namespace BaksDev\Moysklad;
+use Symfony\Config\FrameworkConfig;
 
-use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
-use Symfony\Component\HttpKernel\Bundle\AbstractBundle;
+return static function(FrameworkConfig $framework) {
 
-/** Индекс сортировки 460 */
-final class BaksDevMoyskladBundle extends AbstractBundle
-{
-    public const string NAMESPACE = __NAMESPACE__.'\\';
+    $messenger = $framework->messenger();
 
-    public const string PATH = __DIR__.DIRECTORY_SEPARATOR;
+    $messenger
+        ->transport('moysklad')
+        ->dsn('redis://%env(REDIS_PASSWORD)%@%env(REDIS_HOST)%:%env(REDIS_PORT)%?auto_setup=true')
+        ->options(['stream' => 'moysklad'])
+        ->failureTransport('failed-moysklad')
+        ->retryStrategy()
+        ->maxRetries(3)
+        ->delay(1000)
+        ->maxDelay(0)
+        ->multiplier(3) // увеличиваем задержку перед каждой повторной попыткой
+        ->service(null);
 
+    $failure = $framework->messenger();
 
-}
+    $failure->transport('failed-moysklad')
+        ->dsn('%env(MESSENGER_TRANSPORT_DSN)%')
+        ->options(['queue_name' => 'failed-moysklad']);
+};

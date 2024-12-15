@@ -23,18 +23,25 @@
 
 declare(strict_types=1);
 
-namespace BaksDev\Moysklad;
+namespace BaksDev\Moysklad\Security;
 
-use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
-use Symfony\Component\HttpKernel\Bundle\AbstractBundle;
+use BaksDev\Users\Profile\Group\Security\RoleInterface;
+use BaksDev\Users\Profile\Group\Security\VoterInterface;
+use Symfony\Component\DependencyInjection\Attribute\AutoconfigureTag;
 
-/** Индекс сортировки 460 */
-final class BaksDevMoyskladBundle extends AbstractBundle
+#[AutoconfigureTag('baks.security.voter')]
+final class VoterIndex implements VoterInterface
 {
-    public const string NAMESPACE = __NAMESPACE__.'\\';
+    public const string VOTER = 'INDEX';
 
-    public const string PATH = __DIR__.DIRECTORY_SEPARATOR;
+    /** Метод возвращает правило, конкатенируя ROLE + VOTER */
+    public static function getVoter(): string
+    {
+        return Role::ROLE.'_'.self::VOTER;
+    }
 
-
+    public function equals(RoleInterface $role): bool
+    {
+        return $role->getRole() === Role::ROLE;
+    }
 }

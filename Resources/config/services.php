@@ -21,20 +21,25 @@
  *  THE SOFTWARE.
  */
 
-declare(strict_types=1);
+namespace Symfony\Component\DependencyInjection\Loader\Configurator;
 
-namespace BaksDev\Moysklad;
+use BaksDev\Moysklad\BaksDevMoyskladBundle;
 
-use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
-use Symfony\Component\HttpKernel\Bundle\AbstractBundle;
+return static function(ContainerConfigurator $configurator) {
 
-/** Индекс сортировки 460 */
-final class BaksDevMoyskladBundle extends AbstractBundle
-{
-    public const string NAMESPACE = __NAMESPACE__.'\\';
+    $services = $configurator->services()
+        ->defaults()
+        ->autowire()
+        ->autoconfigure();
 
-    public const string PATH = __DIR__.DIRECTORY_SEPARATOR;
+    $NAMESPACE = BaksDevMoyskladBundle::NAMESPACE;
+    $PATH = BaksDevMoyskladBundle::PATH;
 
-
-}
+    $services->load($NAMESPACE, $PATH)
+        ->exclude([
+            $PATH.'{Entity,Resources,Type}',
+            $PATH.'**'.DIRECTORY_SEPARATOR.'*Message.php',
+            $PATH.'**'.DIRECTORY_SEPARATOR.'*DTO.php',
+            $PATH.'**'.DIRECTORY_SEPARATOR.'*Test.php',
+        ]);
+};
