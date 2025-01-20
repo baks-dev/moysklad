@@ -36,3 +36,4 @@ $ php bin/phpunit --group=moysklad
 ## Лицензия ![License](https://img.shields.io/badge/MIT-green)
 
 The MIT License (MIT). Обратитесь к [Файлу лицензии](LICENSE.md) за дополнительной информацией.
+
