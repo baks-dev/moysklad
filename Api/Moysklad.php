@@ -1,6 +1,6 @@
 <?php
 /*
- *  Copyright 2024.  Baks.dev <admin@baks.dev>
+ *  Copyright 2025.  Baks.dev <admin@baks.dev>
  *  
  *  Permission is hereby granted, free of charge, to any person obtaining a copy
  *  of this software and associated documentation files (the "Software"), to deal
@@ -33,14 +33,13 @@ use DomainException;
 use InvalidArgumentException;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
+use Symfony\Component\DependencyInjection\Attribute\Target;
 use Symfony\Component\HttpClient\HttpClient;
 use Symfony\Component\HttpClient\RetryableHttpClient;
 use Symfony\Contracts\Cache\CacheInterface;
 
 abstract class Moysklad
 {
-    protected LoggerInterface $logger;
-
     protected UserProfileUid|false $profile = false;
 
     private MoyskladAuthorizationToken|false $AuthorizationToken = false;
@@ -49,13 +48,10 @@ abstract class Moysklad
 
     public function __construct(
         #[Autowire(env: 'APP_ENV')] private readonly string $environment,
+        #[Target('moyskladLogger')] protected readonly LoggerInterface $logger,
         private readonly MoyskladTokenByProfileInterface $TokenByProfile,
         private readonly AppCacheInterface $cache,
-        LoggerInterface $moyskladLogger,
-    )
-    {
-        $this->logger = $moyskladLogger;
-    }
+    ) {}
 
     public function profile(UserProfileUid|string $profile): self
     {
